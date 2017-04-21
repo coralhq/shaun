@@ -8,9 +8,9 @@ rancher_url = env.get('RANCHER_URL', env.get('CATTLE_URL'))
 rancher_access_key = env.get('RANCHER_ACCESS_KEY', env.get('CATTLE_ACCESS_KEY'))
 rancher_secret_key = env.get('RANCHER_SECRET_KEY', env.get('CATTLE_SECRET_KEY'))
 rancher_stacks = env.get('RANCHER_STACKS')
-slash_token = env.get('SLASH_TOKEN')
-slash_command = env.get('SLASH_COMMAND')
-team_id = env.get('TEAM_ID')
+slack_token = env.get('SLACK_TOKEN')
+slack_command_services = env.get('SLACK_COMMAND_SERVICES')
+slack_team_id = env.get('SLACK_TEAM_ID')
 
 # app bootstrap
 app = Flask(__name__)
@@ -45,7 +45,7 @@ def create_attachments(states):
 
     return attachments
 
-@slack.command(slash_command, token=slash_token, team_id=team_id, methods=['GET', 'POST'])
+@slack.command(slack_command_services, token=slack_token, team_id=slack_team_id, methods=['GET', 'POST'])
 def check_services(**kwargs):
     auth = (rancher_access_key, rancher_secret_key)
 
@@ -65,7 +65,7 @@ def check_services(**kwargs):
 
     attachments = create_attachments(states)
 
-    return slack.response(slash_command, response_type="in_channel", attachments=attachments)
+    return slack.response(slack_command_services, response_type="in_channel", attachments=attachments)
 
 
 # app run
